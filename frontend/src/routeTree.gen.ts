@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as FacilitiesRouteImport } from './routes/facilities'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -31,6 +32,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FacilitiesRoute = FacilitiesRouteImport.update({
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/facilities': typeof FacilitiesRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRoute
   '/login/admin': typeof LoginAdminRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/facilities': typeof FacilitiesRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRoute
   '/login/admin': typeof LoginAdminRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/facilities': typeof FacilitiesRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRoute
   '/login/admin': typeof LoginAdminRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/facilities'
+    | '/profile'
     | '/register'
     | '/services'
     | '/login/admin'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/facilities'
+    | '/profile'
     | '/register'
     | '/services'
     | '/login/admin'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/facilities'
+    | '/profile'
     | '/register'
     | '/services'
     | '/login/admin'
@@ -192,6 +204,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   FacilitiesRoute: typeof FacilitiesRoute
+  ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   ServicesRoute: typeof ServicesRoute
   LoginAdminRoute: typeof LoginAdminRoute
@@ -213,6 +226,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/facilities': {
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   FacilitiesRoute: FacilitiesRoute,
+  ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   ServicesRoute: ServicesRoute,
   LoginAdminRoute: LoginAdminRoute,

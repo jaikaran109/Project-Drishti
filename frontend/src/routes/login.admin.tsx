@@ -5,25 +5,57 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Stethoscope } from "lucide-react";
+import { loginUser as loginUserRequest } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import {
+  normalizeIdentifierInput,
+  validateAdminLoginForm,
+} from "@/lib/validation";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login/admin")({ component: AdminLogin });
 
 function AdminLogin() {
-  const { loginAdmin } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const [id, setId] = useState("admin");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!id || !password) return toast.error("Please enter ID and password");
-    loginAdmin();
-    toast.success("Welcome, Dr. Verma");
-    navigate({ to: "/admin" });
+
+    const validationError = validateAdminLoginForm(identifier, password);
+
+    if (validationError) {
+      return toast.error(validationError);
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      const response = await loginUserRequest({
+        identifier: identifier.trim(),
+        password,
+      });
+
+      if (response.user.role !== "admin") {
+        return toast.error("This account does not have admin access");
+      }
+
+      login({
+        token: response.token,
+        user: response.user,
+      });
+
+      toast.success(`Welcome, ${response.user.name}`);
+      navigate({ to: "/admin" });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Login failed");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -35,27 +67,57 @@ function AdminLogin() {
               <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-blue-100 text-blue-700">
                 <Stethoscope className="h-7 w-7" />
               </div>
-              <h1 className="mt-3 text-2xl font-semibold text-blue-800">Doctor/Admin Login</h1>
+              <h1 className="mt-3 text-2xl font-semibold text-blue-800">
+                Doctor/Admin Login
+              </h1>
+              <p className="mt-2 text-sm text-slate-500">
+                Use your registered admin email or 10-digit phone number.
+              </p>
             </div>
             <form onSubmit={submit} className="mt-6 space-y-4">
               <div>
-                <Label htmlFor="id">ID / Email</Label>
-                <Input id="id" className="mt-1 h-11" placeholder="Enter ID or email" value={id} onChange={(e) => setId(e.target.value)} />
+                <Label htmlFor="identifier">Email or Phone</Label>
+                <Input
+                  id="identifier"
+                  className="mt-1 h-11"
+                  autoComplete="username"
+                  placeholder="Enter admin email or phone"
+                  value={identifier}
+                  onChange={(e) =>
+                    setIdentifier(normalizeIdentifierInput(e.target.value))
+                  }
+                />
               </div>
               <div>
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" className="mt-1 h-11" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <Input
+                  id="password"
+                  type="password"
+                  className="mt-1 h-11"
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-slate-600">
-                  <Checkbox /> Remember Me
-                </label>
-                <a className="text-blue-700 hover:underline" href="#">Forgot Password?</a>
-              </div>
-              <Button className="w-full h-11 bg-blue-600 hover:bg-blue-700">Secure Login</Button>
+              <p className="rounded-lg bg-blue-50 px-3 py-2 text-xs text-slate-600">
+                Admin access is limited to authorized clinic and review staff.
+              </p>
+              <Button
+                disabled={isSubmitting}
+                className="h-11 w-full bg-blue-600 hover:bg-blue-700"
+              >
+                {isSubmitting ? "Signing In..." : "Secure Login"}
+              </Button>
             </form>
             <p className="mt-5 text-center text-sm text-slate-500">
-              Don't have an account? <Link to="/register" className="text-blue-700 font-medium hover:underline">Register</Link>
+              Need a patient account?{" "}
+              <Link
+                to="/register"
+                className="font-medium text-blue-700 hover:underline"
+              >
+                Register here
+              </Link>
             </p>
           </CardContent>
         </Card>

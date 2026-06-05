@@ -1,1 +1,7 @@
+backend/*.log
+backend/.env
+backend/server.err.log
+backend/server.out.log
+backend/server.verify.err.log
+backend/server.verify.out.log
 node_modules 
