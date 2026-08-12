@@ -1,5 +1,5 @@
 # Drishti
-
+  
 ## Smart Clinic Appointment & Queue Management System
 
 Drishti is a web-based healthcare management platform designed to reduce long waiting lines and simplify appointment booking in clinics and rural healthcare centers.
