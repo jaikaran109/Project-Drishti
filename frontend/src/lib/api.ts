@@ -69,13 +69,12 @@ type ApplicationResponse = {
   message: string;
 };
 
+import { buildApiUrl } from "./api-config";
+
 type ApiRequestOptions = Omit<RequestInit, "body"> & {
   body?: BodyInit | object;
   token?: string | null;
 };
-
-const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
-const buildApiUrl = (path: string) => `${API_BASE_URL}${path}`;
 
 export class ApiError extends Error {
   status: number;

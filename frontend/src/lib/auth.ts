@@ -38,6 +38,8 @@ type AuthContextValue = {
   refreshProfile: () => Promise<void>;
 };
 
+import { buildApiUrl } from "./api-config";
+
 type ProfileResponse = {
   user: AuthUser;
 };
@@ -45,11 +47,9 @@ type ProfileResponse = {
 export const AUTH_STORAGE_KEY = "drishti_auth";
 export const AUTH_EVENT_NAME = "drishti-auth-changed";
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 const isBrowser = () => typeof window !== "undefined";
-const buildApiUrl = (path: string) => `${API_BASE_URL}${path}`;
 
 const writeStoredSession = (session: AuthSession | null, notify: boolean) => {
   if (!isBrowser()) {
