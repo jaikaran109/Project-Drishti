@@ -32,6 +32,8 @@ export type RegisterPayload = {
   age?: string;
   gender?: string;
   password: string;
+  role: "user" | "admin";
+  employeeNumber?: string;
 };
 
 export type LoginPayload = {
@@ -117,7 +119,15 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
 
   if (rawResponse) {
     try {
-      data = JSON.parse(rawResponse);
+      const parsed = JSON.parse(rawResponse);
+      // guard against prototype pollution
+      if (parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)) {
+        data = Object.assign(Object.create(null), parsed);
+        // restore prototype so downstream code can use normal property access
+        Object.setPrototypeOf(data as object, Object.prototype);
+      } else {
+        data = parsed;
+      }
     } catch {
       data = rawResponse;
     }
@@ -141,6 +151,13 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
 
 export const registerUser = async (payload: RegisterPayload) => {
   return apiRequest<AuthResponse>("/api/auth/register", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const registerAdmin = async (payload: RegisterPayload) => {
+  return apiRequest<AuthResponse>("/api/auth/register-admin", {
     method: "POST",
     body: payload,
   });

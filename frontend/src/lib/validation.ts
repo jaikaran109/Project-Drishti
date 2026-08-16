@@ -14,6 +14,8 @@ type RegisterFormValues = {
   gender: string;
   password: string;
   confirm: string;
+  role: "user" | "admin";
+  employeeNumber: string;
 };
 
 type ApplicationFormValues = {
@@ -79,9 +81,14 @@ export const validateRegisterForm = (form: RegisterFormValues) => {
 
   if (form.age) {
     const age = Number(form.age);
-
     if (!Number.isInteger(age) || age < 1 || age > 120) {
       return "Age must be a whole number between 1 and 120";
+    }
+  }
+
+  if (form.role === "admin") {
+    if (!trimValue(form.employeeNumber) || trimValue(form.employeeNumber).length < 3) {
+      return "Employee number must be at least 3 characters";
     }
   }
 
@@ -162,6 +169,8 @@ export const prepareRegisterPayload = (form: RegisterFormValues) => {
     age: trimValue(form.age),
     gender: trimValue(form.gender),
     password: form.password,
+    role: form.role,
+    employeeNumber: form.role === "admin" ? trimValue(form.employeeNumber) : undefined,
   };
 };
 

@@ -13,7 +13,7 @@ export const Route = createFileRoute("/profile")({ component: Profile });
 
 function Profile() {
   const { refreshProfile } = useAuth();
-  const { user, canRender, isReady } = useAuthGuard("user");
+  const { user, canRender, isReady } = useAuthGuard();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -48,12 +48,17 @@ function Profile() {
     return null;
   }
 
+  const isStaff = user.role === "admin";
+
   const profileItems = [
     { icon: UserRound, label: "Full Name", value: user.name },
     { icon: Phone, label: "Phone Number", value: user.phone },
     { icon: UserRound, label: "Father / Guardian", value: user.fatherName },
     { icon: Mail, label: "Email", value: user.email || "Not provided" },
     { icon: MapPin, label: "Address", value: user.address || "Not provided" },
+    ...(isStaff && user.employeeNumber
+      ? [{ icon: UserRound, label: "Employee Number", value: user.employeeNumber }]
+      : []),
   ];
 
   return (
@@ -62,8 +67,14 @@ function Profile() {
         <Card className="border-blue-100 bg-gradient-to-br from-blue-50 to-white">
           <CardContent className="flex flex-col gap-4 p-8 md:flex-row md:items-center md:justify-between">
             <div>
-              <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-                Patient Profile
+              <Badge
+                className={`${
+                  isStaff
+                    ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                    : "bg-blue-100 text-blue-700 hover:bg-blue-100"
+                }`}
+              >
+                {isStaff ? "Staff Profile" : "Patient Profile"}
               </Badge>
               <h1 className="mt-3 text-2xl font-bold text-blue-800 md:text-3xl">
                 {user.name}
@@ -82,9 +93,11 @@ function Profile() {
                 <RefreshCw className={isRefreshing ? "animate-spin" : ""} />
                 {isRefreshing ? "Refreshing..." : "Refresh"}
               </Button>
-              <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                <Link to="/apply">Apply for Appointment</Link>
-              </Button>
+              {!isStaff && (
+                <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                  <Link to="/apply">Apply for Appointment</Link>
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>

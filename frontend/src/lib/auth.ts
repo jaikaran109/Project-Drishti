@@ -19,6 +19,7 @@ export type AuthUser = {
   age?: number;
   gender?: string;
   role: UserRole;
+  employeeNumber?: string;
 };
 
 export type AuthSession = {

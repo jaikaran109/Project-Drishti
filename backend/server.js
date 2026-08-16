@@ -15,8 +15,27 @@ const startServer = async () => {
 
   const app = express();
 
-  app.use(cors());
-  app.use(express.json());
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+    : ["http://localhost:5173", "http://localhost:3000"];
+
+  const isLocalDevelopmentOrigin = (origin) =>
+    process.env.NODE_ENV !== "production" &&
+    /^https?:\/\/(localhost|127\.0\.0\.1)(?::\d+)?$/.test(origin);
+
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin) || isLocalDevelopmentOrigin(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+      },
+      credentials: true,
+    }),
+  );
+  app.use(express.json({ limit: "10kb" }));
 
   app.get("/", (req, res) => {
     res.status(200).json({

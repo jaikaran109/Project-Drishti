@@ -27,6 +27,13 @@ const userSchema = new mongoose.Schema(
       sparse: true,
       default: undefined,
     },
+    employeeNumber: {
+      type: String,
+      trim: true,
+      unique: true,
+      sparse: true,
+      default: undefined,
+    },
     address: {
       type: String,
       trim: true,

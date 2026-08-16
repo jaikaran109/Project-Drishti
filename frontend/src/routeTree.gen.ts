@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FacilitiesRouteImport } from './routes/facilities'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -37,6 +38,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FacilitiesRoute = FacilitiesRouteImport.update({
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/facilities': typeof FacilitiesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/facilities': typeof FacilitiesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/facilities': typeof FacilitiesRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/services': typeof ServicesRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/facilities'
+    | '/forgot-password'
     | '/profile'
     | '/register'
     | '/services'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/facilities'
+    | '/forgot-password'
     | '/profile'
     | '/register'
     | '/services'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/facilities'
+    | '/forgot-password'
     | '/profile'
     | '/register'
     | '/services'
@@ -204,6 +216,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   FacilitiesRoute: typeof FacilitiesRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   ServicesRoute: typeof ServicesRoute
@@ -233,6 +246,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/facilities': {
@@ -324,6 +344,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   FacilitiesRoute: FacilitiesRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   ServicesRoute: ServicesRoute,

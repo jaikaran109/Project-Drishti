@@ -10,8 +10,11 @@ import {
   CalendarCheck,
   LogOut,
   Eye,
+  LayoutDashboard,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
   SheetContent,
@@ -105,14 +108,24 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               </>
             ) : (
               <>
+                {role === "admin" && (
+                  <Badge className="hidden bg-emerald-100 text-emerald-700 hover:bg-emerald-100 sm:flex">
+                    <ShieldCheck className="mr-1 h-3 w-3" /> Staff
+                  </Badge>
+                )}
                 <Button
                   variant="outline"
-                  className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                  className={`${
+                    role === "admin"
+                      ? "border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                      : "border-blue-200 text-blue-700 hover:bg-blue-50"
+                  }`}
                   onClick={() =>
                     navigate({ to: role === "admin" ? "/admin" : "/dashboard" })
                   }
                 >
-                  Dashboard
+                  <LayoutDashboard className="h-4 w-4" />
+                  {role === "admin" ? "Admin Panel" : "Dashboard"}
                 </Button>
                 <Button
                   variant="ghost"
@@ -141,7 +154,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
           <div className="text-sm text-blue-100">
-            Copyright 2026 Drishti. All rights reserved.
+            Copyright {new Date().getFullYear()} Drishti. All rights reserved.
           </div>
           <div className="text-sm text-blue-100">
             Helping Rural India See Better.
