@@ -7,7 +7,7 @@ Patients can book appointments online, check their queue status, and get proper 
 ---
  
 ## Live Links
-- 🌐 **Frontend (Live App):** [project-drishti.pages.dev](project-drishti.jaik04227.workers.dev) <!-- replace with your actual enabled Cloudflare URL -->
+- 🌐 **Frontend (Live App):** [project-drishti.pages.dev](https://project-drishti.jaik04227.workers.dev/) 
 - ⚙️ **Backend (API):** [project-drishti-le4s.onrender.com](https://project-drishti-le4s.onrender.com)
 - 💻 **GitHub Repository:** [github.com/jaikaran109/Project-Drishti](https://github.com/jaikaran109/Project-Drishti)
 
